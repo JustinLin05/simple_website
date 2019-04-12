@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  web:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.flask
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "5000:80"
+
+  #front-end:
+    #build: 
+      #context: ./
+      #dockerfile: Dockerfile.node
+    #restart: always
+    #volumes:
+      #- .:/app
+    #ports:
+      #- "6666:1234"
