@@ -1,19 +1,26 @@
 from flask import Flask, jsonify, render_template, request
 from werkzeug import secure_filename
 from flask_cors import CORS
+import tensorflow as tf
+
+
 import keras
 from keras.preprocessing import image
 from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D
+from keras.layers import Dense, GlobalAveragePooling2D, Lambda, Conv2D, BatchNormalization, MaxPooling2D, Dropout, Flatten
 from keras import backend as K
 from keras.models import model_from_json
 from keras.models import Sequential
+from keras import optimizers
+from keras.optimizers import Adam
 
+K.set_image_data_format('channels_first') # set format
 import cv2
 import numpy as np
 import os
 cwd = os.getcwd()
 
+classes=['Zero','One','Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
 # mean and standard deviation of the MNIST train dataset
 mean_px=33.31842
 std_px=78.56749
@@ -42,7 +49,7 @@ def get_model_bn_do():
     return model
 model = get_model_bn_do()
 # load weights into new model
-loaded_model.load_weights(cwd+'/mnist_final.h5')
+model.load_weights(cwd+'/mnist_final.h5')
 #print("Succesfully loaded-rea model")
 
 app = Flask(__name__)
@@ -61,12 +68,13 @@ def upload_file1():
    if request.method == 'POST':
       f = request.files['file']
       f.save(secure_filename(f.filename))
-      im_gray = cv2.imread(f.filename, cv.CV_LOAD_IMAGE_GRAYSCALE)
-      sample=cv2.resize(im_gray,(28,28),interpolation = cv2.INTER_AREA)
-      sample=image.img_to_array(sample)/255
-      sample=np.expand_dims(sample,0)
+      im_gray = cv2.imread(f.filename, 0)
+      sample=cv2.resize(im_gray,(28,28))
+      sample=abs(255-sample)
+      #sample=image.img_to_array(sample)/255
+      sample=np.expand_dims(np.expand_dims(sample,0),0)
       pred=model.predict(sample,batch_size=1)
-      return pred
+      return str(classes[np.argmax(pred[0])])+str(pred)
 
 @app.route('/api/hello-world', methods=['GET'])
 def say_hello():
