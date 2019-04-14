@@ -73,7 +73,12 @@ def upload_file1():
       #sample=image.img_to_array(sample)/255
       sample=np.expand_dims(np.expand_dims(sample,0),0)
       pred=model.predict(sample,batch_size=1)
-      return str(classes[np.argmax(pred[0])])+str(pred)
+      if(any(i >= 0.95 for i in pred[0])==True):
+          prob=100*(pred[0][np.argmax(pred[0])])
+          text="The number is "+str(classes[np.argmax(pred[0])])+"\n Probability:"+str(round(prob,2))+"%"
+      else:
+          text="No number recognized"
+      return text
 
 @app.route('/api/hello-world', methods=['GET'])
 def say_hello():
