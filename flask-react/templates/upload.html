@@ -1,9 +1,77 @@
 <html>
+    <style>
+      body {
+        display: flex;
+        height: calc(100vh - 100px);
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(250,250,250);
+        margin: 50px 0;
+      }
+      #wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 300px;
+        padding: 10px 10px 0 10px;
+        border-radius: 5px;
+        border: 1px solid rgb(200,200,200);
+        align-items: center;
+        box-shadow: 1px 1px 3px rgb(180,180,180);
+      }
+      img {
+        min-height: 200px;
+        height: auto;
+        width: 300px;
+      }
+      form {
+        display: inline-flex;
+        width: calc(100%);
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+      #file-selector{
+        margin-bottom: 5px;
+      }
+      #submit-btn {
+        width: calc(100% + 40px);
+        transform: translate(0px,0);
+        padding: 5px 0px;
+        border: none;
+        background-color: transparent;
+        border-top: 1px solid rgb(200,200,200);
+        cursor: pointer;
+      }
+      </style>
    <body>
-      <form action = "http://192.168.99.100:5000/uploader" method = "POST"
-         enctype = "multipart/form-data">
-         <center><input type = "file" name = "file" />
-         <input type = "submit"/><center>
-      </form>
+      <div id="wrapper">
+      <img id="img-displayer"/>
+        <form action = "http://192.168.99.100:5000/uploader" method = "POST"
+           enctype = "multipart/form-data">
+           <input id="file-selector" type = "file" name = "file" />
+           <input id="submit-btn"type = "submit"/>
+        </form>
+       </div>
    </body>
+   <script>
+      
+        const inputBtn = document.querySelector("#file-selector");
+        const imageDom = document.querySelector("#img-displayer");
+
+        const displayImage = (inputBtn,target) => {
+            const fr = new FileReader();
+            
+            // when image is loaded, set the src of the image where you want to display it
+            fr.onload = () => target.src = fr.result
+            
+            // when file selected, use fr to resolve the data
+            inputBtn.addEventListener("change", () => {
+                
+                // select the first file
+                    const url = fr.readAsDataURL(inputBtn.files[0])
+            })
+        }
+        displayImage(inputBtn, imageDom);
+    </script>
 </html>
