@@ -50,8 +50,7 @@ def get_model_bn_do():
 model = get_model_bn_do()
 # load weights into new model
 model.load_weights(cwd+'/mnist_final.h5')
-#print("Succesfully loaded-rea model")
-
+#print("Succesfully loaded model")
 app = Flask(__name__)
 cors = CORS(app, resources={"/api/*": {"origins": "*"}})
 

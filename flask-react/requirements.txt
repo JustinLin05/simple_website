@@ -9,5 +9,6 @@ six==1.10.0
 Werkzeug==0.14.1
 wincertstore==0.2
 opencv-python
-keras
-tensorflow
+keras==2.1.5
+tensorflow==1.6.0
+h5py==2.9.0
