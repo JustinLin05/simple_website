@@ -2,6 +2,7 @@
     <style>
       body {
         display: flex;
+        flex-direction: column;
         height: calc(100vh - 100px);
         align-items: center;
         justify-content: center;
@@ -18,13 +19,14 @@
         border: 1px solid rgb(200,200,200);
         align-items: center;
         box-shadow: 1px 1px 3px rgb(180,180,180);
+        margin-bottom: 5px;
       }
       img {
         min-height: 200px;
         height: auto;
         width: 300px;
       }
-      form {
+      #form {
         display: inline-flex;
         width: calc(100%);
         flex-direction: row;
@@ -42,22 +44,26 @@
         background-color: transparent;
         border-top: 1px solid rgb(200,200,200);
         cursor: pointer;
+        outline: none;
       }
+      p { font-size: 15px;}
       </style>
    <body>
       <div id="wrapper">
       <img id="img-displayer"/>
-        <form action = "http://192.168.99.100:5000/uploader" method = "POST"
-           enctype = "multipart/form-data">
+        <div id="form">
            <input id="file-selector" type = "file" name = "file" />
-           <input id="submit-btn"type = "submit"/>
-        </form>
+           <input id="submit-btn" type = "submit"/>
+        </div>
        </div>
+       <p id="msg"></p>
    </body>
    <script>
-      
-        const inputBtn = document.querySelector("#file-selector");
-        const imageDom = document.querySelector("#img-displayer");
+        
+        const inputBtn = document.querySelector("#file-selector")
+        const imageDom = document.querySelector("#img-displayer")
+        const submitBtn = document.querySelector("#submit-btn")
+        let selectedData = null
 
         const displayImage = (inputBtn,target) => {
             const fr = new FileReader();
@@ -66,12 +72,34 @@
             fr.onload = () => target.src = fr.result
             
             // when file selected, use fr to resolve the data
-            inputBtn.addEventListener("change", () => {
+            inputBtn.addEventListener("change", e => {
                 
                 // select the first file
-                    const url = fr.readAsDataURL(inputBtn.files[0])
+                selectedData = e.target.files[0]
+                const url = fr.readAsDataURL(selectedData)
             })
         }
-        displayImage(inputBtn, imageDom);
+        displayImage(inputBtn, imageDom)
+        
+        submitBtn.addEventListener('click', () => {
+
+          const msgDOM = document.querySelector('#msg')
+
+          const formData = new FormData()
+          if (!selectedData) msgDOM.innerHTML = 'please select an image first'
+          else {
+            formData.append('file', selectedData)
+
+              fetch(`http://192.168.99.100:5000/uploader`, {
+                method: 'POST',
+                body: formData
+              })
+              .then( res => {
+                return  res.status == 500 ? 'Oops, there are something wrong in the server':res.text()
+              })
+              .then( text => msgDOM.innerHTML = text)
+              .catch( err => msgDOM.innerHTML = 'Oops, there are something wrong~')
+          }
+        })
     </script>
 </html>
