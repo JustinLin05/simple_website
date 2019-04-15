@@ -29,4 +29,4 @@ docker-machine ip
 ## Development
 
 * Back-end code is in ```app.py```
-* Front-end code is under ```src/```
+* Front-end code is under ```/templates```
