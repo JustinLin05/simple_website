@@ -25,6 +25,7 @@ docker-compose up
 docker-machine ip
 ```
 * Ubuntu ```<your docker ip> is localhost```
+* When you find ```<your docker ip>```, also go into ```flask-react/templates``` folder to modify```upload.html```, change ```fetch(`http://localhost:5000/uploader`, {...``` to ```fetch(`http://<your docker ip>:5000/uploader`, {```
 * Ask for the number(only for 0-9) you paint, and the website will predict it.
 ## Development
 
