@@ -24,8 +24,8 @@ docker-compose up
 ```
 docker-machine ip
 ```
-*Ubuntu <your docker ip> is localhost
-*Ask for the number(only for 0-9) you paint, and the website will predict it.
+* Ubuntu ```<your docker ip> is localhost```
+* Ask for the number(only for 0-9) you paint, and the website will predict it.
 ## Development
 
 * Back-end code is in ```app.py```
